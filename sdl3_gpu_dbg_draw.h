@@ -99,6 +99,7 @@ void SDL_DrawGPUDbgLine3D(
 
 #include <stddef.h>
 #include <string.h>
+#include "sdl3_gpu_dbg_draw_shaders.h"
 
 typedef enum
 {
@@ -117,6 +118,50 @@ static pass_type_t pass_type;
 static float matrix[16];
 static float channels[4];
 
+static SDL_GPUShader* load_shader(
+    SDL_GPUDevice* device, // dont pass
+    const SDL_GPUTextureFormat color_texture_format,
+    const SDL_GPUTextureFormat depth_texture_format,
+    const unsigned char* code,
+    const size_t size,
+    const int num_uniform_buffers,
+    const int num_samplers,
+    const int num_storage_textures,
+    const int num_storage_buffers,
+    const bool frag)
+{
+    SDL_GPUShaderCreateInfo create_info = {0};
+    create_info.code = (const Uint8*) code;
+    create_info.code_size = size;
+    create_info.num_uniform_buffers = num_uniform_buffers;
+    create_info.num_samplers = num_samplers;
+    create_info.num_storage_textures = num_storage_textures;
+    create_info.num_storage_buffers = num_storage_buffers;
+    if (SDL_GetGPUShaderFormats(device) & SDL_GPU_SHADERFORMAT_SPIRV)
+    {
+        create_info.format = SDL_GPU_SHADERFORMAT_SPIRV;
+        create_info.entrypoint = "main";
+    }
+    else
+    {
+        SDL_Log("Unsupported");
+        // TODO:
+        return NULL;
+    }
+    if (frag)
+    {
+        create_info.stage = SDL_GPU_SHADERSTAGE_FRAGMENT;
+        // just pass this in directly dont do an if
+    }
+    else
+    {
+        SDL_Log("Unsupported");
+        // TODO:
+        return NULL;
+    }
+    return SDL_CreateGPUShader(device, &create_info);
+}
+
 bool SDL_InitGPUDbgDraw(
     SDL_GPUDevice* device_,
     const SDL_GPUTextureFormat color_texture_format,
@@ -127,6 +172,17 @@ bool SDL_InitGPUDbgDraw(
         return false;
     }
     device = device_;
+
+    SDL_GPUShader* test = load_shader(
+        device,
+        color_texture_format,
+        depth_texture_format,
+        shaders_bin_line_3d_frag_spv,
+        shaders_bin_line_3d_frag_spv_len,
+        1, 0, 0, 0,
+        true);
+    SDL_ReleaseGPUShader(device, test);
+
     return true;
 }
 

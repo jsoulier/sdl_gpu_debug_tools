@@ -1,0 +1,22 @@
+#include <metal_stdlib>
+#include <simd/simd.h>
+
+using namespace metal;
+
+struct t_color
+{
+    float4 u_color;
+};
+
+struct main0_out
+{
+    float4 o_color [[color(0)]];
+};
+
+fragment main0_out main0(constant t_color& _12 [[buffer(0)]])
+{
+    main0_out out = {};
+    out.o_color = _12.u_color;
+    return out;
+}
+
