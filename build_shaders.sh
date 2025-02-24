@@ -1,6 +1,6 @@
 #!/bin/sh
 
-local PLATFORM=""
+PLATFORM=""
 if [[ "$OSTYPE" == "msys" ]]; then
     PLATFORM="win64"
 else
@@ -9,14 +9,15 @@ else
 fi
 
 SHADERCROSS="SDL_shadercross/$PLATFORM/shadercross.exe"
-SHADERS="sdl3_gpu_dbg_draw_shaders.h"
+INCLUDE="sdl3_gpu_dbg_draw_shaders.h"
+SHADERS=("line_3d.frag" "line_3d.vert")
 
-create_shader() {
-    local FILE=$1
-    local SRC="shaders/$FILE"
-    local SPV="shaders/bin/$FILE.spv"
-    local DXIL="shaders/bin/$FILE.dxil"
-    local MSL="shaders/bin/$FILE.msl"
+echo "#pragma once" > $INCLUDE
+for FILE in "${SHADERS[@]}"; do
+    SRC="shaders/$FILE"
+    SPV="shaders/bin/$FILE.spv"
+    DXIL="shaders/bin/$FILE.dxil"
+    MSL="shaders/bin/$FILE.msl"
     glslc "$SRC" -o "$SPV" -I src
     if [[ $? -ne 0 ]]; then
         echo "Error compiling shader $SRC to $SPV"
@@ -32,13 +33,7 @@ create_shader() {
         echo "Error converting $SPV to $MSL."
         exit 1
     fi
-    xxd -i $SPV >> $SHADERS
-    xxd -i $DXIL >> $SHADERS
-    xxd -i $MSL >> $SHADERS
-}
-
-shaders=("line_3d.frag" "line_3d.vert")
-echo "#pragma once" > $SHADERS
-for shader in "${shaders[@]}"; do
-    ( create_shader "$shader" )
+    xxd -i $SPV >> $INCLUDE
+    xxd -i $DXIL >> $INCLUDE
+    xxd -i $MSL >> $INCLUDE
 done
