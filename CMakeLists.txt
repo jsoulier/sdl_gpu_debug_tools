@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.24)
-project(sdl3_gpu_dbg_draw)
+project(sdl_gpud)
 
 set(BINARY_DIR ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${BINARY_DIR})
@@ -11,8 +11,7 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG ${BINARY_DIR})
 make_directory(${BINARY_DIR})
 
 add_subdirectory(SDL)
-add_executable(sdl3_gpu_dbg_draw WIN32
-    main.c
-)
-target_link_libraries(sdl3_gpu_dbg_draw PUBLIC SDL3::SDL3)
-set_target_properties(sdl3_gpu_dbg_draw PROPERTIES C_STANDARD 11)
+add_subdirectory(glm)
+add_executable(sdl_gpud WIN32 main.cpp sdl_gpud.c)
+target_link_libraries(sdl_gpud PUBLIC SDL3::SDL3 glm::glm)
+set_target_properties(sdl_gpud PROPERTIES CXX_STANDARD 20)

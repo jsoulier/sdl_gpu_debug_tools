@@ -5,9 +5,9 @@
             "name": "win32",
             "type": "cppvsdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/bin/sdl3_gpu_dbg_draw.exe",
+            "program": "${workspaceFolder}/build/bin/sdl_gpud.exe",
             "cwd": "${workspaceFolder}/build/bin",
-            "preLaunchTask": "all"
+            "preLaunchTask": "CMake: build"
         },
     ]
 }

@@ -1,8 +1,14 @@
 {
     "configurations": [
         {
-            "name": "cmake",
-            "configurationProvider": "ms-vscode.cmake-tools"
+            "name": "win32",
+            "defines": [
+                "SDL_GPUD_IMPL"
+            ],
+            "includePath": [
+                "${workspaceFolder}/SDL/include",
+                "${workspaceFolder}/glm"
+            ]
         }
     ],
     "version": 4

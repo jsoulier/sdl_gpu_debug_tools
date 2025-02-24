@@ -9,10 +9,11 @@ else
 fi
 
 SHADERCROSS="SDL_shadercross/$PLATFORM/shadercross.exe"
-INCLUDE="sdl3_gpu_dbg_draw_shaders.h"
-SHADERS=("line_3d.frag" "line_3d.vert")
+INCLUDE="sdl_gpud_shaders.h"
+SHADERS=("poly.frag" "poly.vert" "font.frag" "font.vert")
 
-echo "#pragma once" > $INCLUDE
+rm -f $INCLUDE
+mkdir -p "shaders/bin"
 for FILE in "${SHADERS[@]}"; do
     SRC="shaders/$FILE"
     SPV="shaders/bin/$FILE.spv"
@@ -20,17 +21,17 @@ for FILE in "${SHADERS[@]}"; do
     MSL="shaders/bin/$FILE.msl"
     glslc "$SRC" -o "$SPV" -I src
     if [[ $? -ne 0 ]]; then
-        echo "Error compiling shader $SRC to $SPV"
+        echo "Error compiling $SRC to $SPV"
         exit 1
     fi
     $SHADERCROSS "$SPV" -o "$DXIL"
     if [[ $? -ne 0 ]]; then
-        echo "Error converting $SPV to $DXIL."
+        echo "Error converting $SPV to $DXIL"
         exit 1
     fi
     $SHADERCROSS "$SPV" -o "$MSL"
     if [[ $? -ne 0 ]]; then
-        echo "Error converting $SPV to $MSL."
+        echo "Error converting $SPV to $MSL"
         exit 1
     fi
     xxd -i $SPV >> $INCLUDE

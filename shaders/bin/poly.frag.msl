@@ -1,0 +1,26 @@
+#include <metal_stdlib>
+#include <simd/simd.h>
+
+using namespace metal;
+
+struct main0_out
+{
+    float4 o_color [[color(0)]];
+};
+
+struct main0_in
+{
+    uint i_color [[user(locn0)]];
+};
+
+fragment main0_out main0(main0_in in [[stage_in]])
+{
+    main0_out out = {};
+    uint red = (in.i_color >> uint(24)) & 255u;
+    uint green = (in.i_color >> uint(16)) & 255u;
+    uint blue = (in.i_color >> uint(8)) & 255u;
+    uint alpha = (in.i_color >> uint(0)) & 255u;
+    out.o_color = float4(float(red), float(green), float(blue), float(alpha)) / float4(255.0);
+    return out;
+}
+
