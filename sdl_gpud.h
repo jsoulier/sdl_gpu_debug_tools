@@ -202,6 +202,7 @@ inline void SDL_DrawGPUDSphere(
 #include "sdl_gpud_shaders.h"
 
 #define BUFFER_CAPACITY 1024
+#define SPHERE_VERTICES 20
 
 typedef enum
 {
@@ -441,8 +442,15 @@ void SDL_DrawGPUDPoint(
     const SDL_GPUDVertex* center,
     const float radius)
 {
+    if (!device) {
+        return;
+    }
     if (!center) {
         SDL_InvalidParamError("center");
+        return;
+    }
+    if (radius < SDL_FLT_EPSILON) {
+        SDL_InvalidParamError("radius");
         return;
     }
     SDL_GPUDVertex start = {0};
@@ -498,6 +506,9 @@ void SDL_DrawGPUDBox(
     const SDL_GPUDVertex* start,
     const SDL_GPUDVertex* end)
 {
+    if (!device) {
+        return;
+    }
     if (!start) {
         SDL_InvalidParamError("start");
         return;
@@ -539,6 +550,9 @@ void SDL_DrawGPUDLine(
     const SDL_GPUDVertex* start,
     const SDL_GPUDVertex* end)
 {
+    if (!device) {
+        return;
+    }
     if (!start) {
         SDL_InvalidParamError("start");
         return;
@@ -559,7 +573,44 @@ void SDL_DrawGPUDSphere(
     const SDL_GPUDVertex* center,
     const float radius)
 {
-
+    if (!device) {
+        return;
+    }
+    if (!center) {
+        SDL_InvalidParamError("center");
+        return;
+    }
+    if (radius < SDL_FLT_EPSILON) {
+        SDL_InvalidParamError("radius");
+        return;
+    }
+    SDL_GPUDVertex vertices[SPHERE_VERTICES * SPHERE_VERTICES * 2];
+    int index = 0;
+    for (int i = 0; i < SPHERE_VERTICES; i++) {
+        const float phi = i / (float) (SPHERE_VERTICES - 1) * SDL_PI_F;
+        for (int j = 0; j < SPHERE_VERTICES; j++) {
+            const float theta = j / (float) (SPHERE_VERTICES - 1) * 2 * SDL_PI_F;
+            vertices[index].x = center->x + radius * SDL_sin(phi) * SDL_cos(theta);
+            vertices[index].y = center->y + radius * SDL_sin(phi) * SDL_sin(theta);
+            vertices[index].z = center->z + radius * SDL_cos(phi);
+            vertices[index].color = center->color;
+            index++;
+        }
+    }
+    for (int i = 0; i < SPHERE_VERTICES - 1; i++) {
+        for (int j = 0; j < SPHERE_VERTICES; j++) {
+            const int curr = i * SPHERE_VERTICES + j;
+            const int next = ((i + 1) * SPHERE_VERTICES + j) % (SPHERE_VERTICES * SPHERE_VERTICES);
+            SDL_DrawGPUDLine(&vertices[curr], &vertices[next]);
+        }
+    }
+    for (int i = 0; i < SPHERE_VERTICES - 1; i++) {
+        for (int j = 0; j < SPHERE_VERTICES - 1; j++) {
+            const int curr = i * SPHERE_VERTICES + j;
+            const int next = i * SPHERE_VERTICES + (j + 1);
+            SDL_DrawGPUDLine(&vertices[curr], &vertices[next]);
+        }
+    }
 }
 
 static void TextFunc(

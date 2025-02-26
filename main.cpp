@@ -206,6 +206,8 @@ int main(int argc, char** argv)
         SDL_DrawGPUDLine({10.0f, 10.0f, -10.0f}, {10.0f, 20.0f, -10.0f});
         SDL_SetGPUDColor({0.0f, 0.0f, 1.0f, 1.0f});
         SDL_DrawGPUDLine({10.0f, 10.0f, -10.0f}, {10.0f, 10.0f, -20.0f});
+        SDL_SetGPUDColor({1.0f, 0.0f, 1.0f, 1.0f});
+        SDL_DrawGPUDSphere({-30.0f, 30.0f, 10.0f}, 10.0f);
         SDL_SubmitGPUD(command_buffer, color_texture, depth_texture, &matrix_3d);
         SDL_SubmitGPUCommandBuffer(command_buffer);
     }
