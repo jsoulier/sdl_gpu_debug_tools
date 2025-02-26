@@ -300,7 +300,6 @@ bool SDL_InitGPUD(
                     .dst_alpha_blendfactor = SDL_GPU_BLENDFACTOR_ONE_MINUS_SRC_ALPHA,
                 },
             }},
-            .depth_stencil_format = depth_format,
         },
         .vertex_input_state = {
             .num_vertex_attributes = 2,
@@ -326,15 +325,19 @@ bool SDL_InitGPUD(
     };
     pipeline_info.primitive_type = SDL_GPU_PRIMITIVETYPE_LINELIST;
     pipeline_info.target_info.has_depth_stencil_target = false;
+    pipeline_info.target_info.depth_stencil_format = SDL_GPU_TEXTUREFORMAT_INVALID;
     line_2d_pipeline = SDL_CreateGPUGraphicsPipeline(device, &pipeline_info);
     pipeline_info.primitive_type = SDL_GPU_PRIMITIVETYPE_LINELIST;
     pipeline_info.target_info.has_depth_stencil_target = true;
+    pipeline_info.target_info.depth_stencil_format = depth_format;
     line_3d_pipeline = SDL_CreateGPUGraphicsPipeline(device, &pipeline_info);
     pipeline_info.primitive_type = SDL_GPU_PRIMITIVETYPE_TRIANGLELIST;
     pipeline_info.target_info.has_depth_stencil_target = false;
+    pipeline_info.target_info.depth_stencil_format = SDL_GPU_TEXTUREFORMAT_INVALID;
     poly_2d_pipeline = SDL_CreateGPUGraphicsPipeline(device, &pipeline_info);
     pipeline_info.primitive_type = SDL_GPU_PRIMITIVETYPE_TRIANGLELIST;
     pipeline_info.target_info.has_depth_stencil_target = true;
+    pipeline_info.target_info.depth_stencil_format = depth_format;
     poly_3d_pipeline = SDL_CreateGPUGraphicsPipeline(device, &pipeline_info);
     if (!line_2d_pipeline || !line_3d_pipeline || !poly_2d_pipeline || !poly_3d_pipeline) {
         goto error;
@@ -741,7 +744,6 @@ void SDL_SubmitGPUD(
         SDL_InvalidParamError("matrix");
         return;
     }
-    SDL_PushGPUDebugGroup(command_buffer, "gpud_upload");
     SDL_GPUCopyPass* copy_pass = SDL_BeginGPUCopyPass(command_buffer);
     if (!copy_pass) {
         return;
@@ -757,8 +759,6 @@ void SDL_SubmitGPUD(
         SDL_UploadToGPUBuffer(copy_pass, &location, &region, false);
     }
     SDL_EndGPUCopyPass(copy_pass);
-    SDL_PopGPUDebugGroup(command_buffer);
-    SDL_PushGPUDebugGroup(command_buffer, "gpud_render");
     SDL_GPUColorTargetInfo color_info = {0};
     color_info.texture = color_texture;
     color_info.load_op = SDL_GPU_LOADOP_LOAD;
@@ -811,7 +811,6 @@ void SDL_SubmitGPUD(
         free(prev);
     }
     SDL_EndGPURenderPass(render_pass);
-    SDL_PopGPUDebugGroup(command_buffer);
     head = NULL;
     tail = NULL;
 }

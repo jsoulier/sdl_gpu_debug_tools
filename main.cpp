@@ -91,6 +91,8 @@ int main(int argc, char** argv)
             continue;
         }
         if (width != w || height != h) {
+            SDL_PropertiesID depth_texture_props = SDL_CreateProperties();
+            SDL_SetFloatProperty(depth_texture_props, SDL_PROP_GPU_TEXTURE_CREATE_D3D12_CLEAR_DEPTH_FLOAT, 1.0f);
             SDL_GPUTextureCreateInfo texture_info{};
             texture_info.format = SDL_GPU_TEXTUREFORMAT_D32_FLOAT;
             texture_info.type = SDL_GPU_TEXTURETYPE_2D;
@@ -99,7 +101,9 @@ int main(int argc, char** argv)
             texture_info.height = h;
             texture_info.layer_count_or_depth = 1;
             texture_info.num_levels = 1;
+            texture_info.props = depth_texture_props;
             depth_texture = SDL_CreateGPUTexture(device, &texture_info);
+            SDL_DestroyProperties(depth_texture_props);
             if (!depth_texture) {
                 SDL_Log("Failed to create texture: %s", SDL_GetError());
                 SDL_SubmitGPUCommandBuffer(command_buffer);
@@ -164,9 +168,9 @@ int main(int argc, char** argv)
             SDL_DrawGPUDLine({0.0f, y}, {width, y});
             SDL_DrawGPUDLine({0.0f, height - y}, {width, height - y});
         }
-        SDL_SetGPUDColor({1.0f, 0.0f, 0.0f, 0.5f});
+        SDL_SetGPUDColor({1.0f, 0.0f, 0.0f, 0.2f});
         SDL_DrawGPUDPoint({30.0f, height - 50.0f}, 20.0f);
-        SDL_SetGPUDColor({0.0f, 1.0f, 0.0f, 0.5f});
+        SDL_SetGPUDColor({0.0f, 1.0f, 0.0f, 0.2f});
         SDL_DrawGPUDPoint({40.0f, height - 60.0f}, 20.0f);
         SDL_SetGPUDColor({1.0f, 0.0f, 1.0f, 1.0f});
         SDL_DrawGPUDText("abcdefghijklmnopqrstuvwxyz", 10.0f, 30.0f, 10);
