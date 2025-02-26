@@ -1,8 +1,14 @@
 # SDL GPUD
 
-> NOTE: Still a work in progress. More shapes and text-rendering will be added soon
+An immediate-mode debug drawing tool for SDL3 GPU
 
-An embeddable immediate-mode drawing API using SDL3 GPU for C and C++.
+![](image.png)
+
+### Features
+- Vulkan, Direct3D12 and Metal support
+- 2D and 3D primitives
+- 2D text rendering
+- And more soon...
 
 ### Using SDL GPUD
 
@@ -16,40 +22,27 @@ To use SDL GPUD, copy these two headers into your project and in **one C** file 
 #include "sdl_gpud.h"
 ```
 
-See the following for an example (or [main.cpp](main.cpp)):
+See the following for a basic example (or [main.cpp](main.cpp)):
 ```c++
-if (!SDL_InitGPUD(device,
-    SDL_GetGPUSwapchainTextureFormat(device, window),
-    SDL_GPU_TEXTUREFORMAT_D32_FLOAT))
-{
-    // Handle errors
+if (!SDL_InitGPUD(/* ... */)) {
+    /* Handle errors */
 }
 
-while (true)
-{
-    // Acquire command buffer and swapchain texture
-    // Do regular drawing...
+while (true) {
+    /* Acquire command buffer and swapchain texture */
+    /* Do regular drawing... */
 
-    // Draw north facing red line
-    SDL_GPUDColor({1.0f, 0.0f, 0.0f, 1.0f});
-    SDL_GPUDLine({0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 100.0f});
+    SDL_SetGPUDColor({1.0f, 0.0f, 0.0f, 1.0f});
+    SDL_DrawGPUDLine({0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 100.0f});
+    SDL_SetGPUDColor({0.0f, 1.0f, 0.0f, 1.0f});
+    SDL_DrawGPUDLine({0.0f, 0.0f, 0.0f}, {0.0f, 100.0f, 0.0f});
+    SDL_SetGPUDColor({0.0f, 0.0f, 1.0f, 1.0f});
+    SDL_DrawGPUDLine({0.0f, 0.0f, 0.0f}, {100.0f, 0.0f, 0.0f});
 
-    // Draw upwards facing green line
-    SDL_GPUDColor({0.0f, 1.0f, 0.0f, 1.0f});
-    SDL_GPUDLine({0.0f, 0.0f, 0.0f}, {0.0f, 100.0f, 0.0f});
-
-    // Draw east facing blue line
-    SDL_GPUDColor({0.0f, 0.0f, 1.0f, 1.0f});
-    SDL_GPUDLine({0.0f, 0.0f, 0.0f}, {100.0f, 0.0f, 0.0f});
-
-    // Submit draw commands
-    SDL_GPUDraw(/* ... */);
+    /* Submit draw commands */
+    SDL_SubmitGPUD(/* ... */);
     SDL_SubmitGPUCommandBuffer(/* ... */);
 }
 
 SDL_QuitGPUD();
 ```
-
-### Attributions
-
-- Sean Barrett (stb_easy_font)

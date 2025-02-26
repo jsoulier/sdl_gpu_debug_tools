@@ -10,15 +10,14 @@ fi
 
 SHADERCROSS="SDL_shadercross/$PLATFORM/shadercross.exe"
 INCLUDE="sdl_gpud_shaders.h"
-SHADERS=("poly.frag" "poly.vert" "font.frag" "font.vert")
+SHADERS=("shader.frag" "shader.vert")
 
 rm -f $INCLUDE
-mkdir -p "shaders/bin"
 for FILE in "${SHADERS[@]}"; do
     SRC="shaders/$FILE"
-    SPV="shaders/bin/$FILE.spv"
-    DXIL="shaders/bin/$FILE.dxil"
-    MSL="shaders/bin/$FILE.msl"
+    SPV="shaders/$FILE.spv"
+    DXIL="shaders/$FILE.dxil"
+    MSL="shaders/$FILE.msl"
     glslc "$SRC" -o "$SPV" -I src
     if [[ $? -ne 0 ]]; then
         echo "Error compiling $SRC to $SPV"
