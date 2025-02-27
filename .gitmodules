@@ -1,6 +1,6 @@
 [submodule "SDL"]
-	path = SDL
+	path = example/SDL
 	url = https://github.com/libsdl-org/SDL
 [submodule "glm"]
-	path = glm
+	path = example/glm
 	url = https://github.com/g-truc/glm

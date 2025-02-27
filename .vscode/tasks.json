@@ -19,28 +19,5 @@
             },
             "problemMatcher": [],
         },
-        {
-            "label": "cmake",
-            "type": "shell",
-            "command": "cmake",
-            "args": [
-                "--build",
-                ".",
-                "--parallel",
-                "8"
-            ],
-            "options": {
-                "cwd": "${workspaceFolder}/build"
-            },
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            },
-            "dependsOn": [
-                "shaders"
-            ],
-            "dependsOrder": "sequence",
-            "problemMatcher": [],
-        },
     ]
 }

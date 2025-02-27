@@ -1,8 +1,8 @@
 # SDL GPUD
 
-An immediate-mode debug drawing tool for SDL3 GPU
+A header-only immediate-mode debug drawing API for SDL3 GPU
 
-![](image.png)
+![](doc/image.png)
 
 ### Features
 - Vulkan, Direct3D12 and Metal support
@@ -13,16 +13,16 @@ An immediate-mode debug drawing tool for SDL3 GPU
 ### Using SDL GPUD
 
 SDL GPUD consists of two headers:
-- `sdl_gpud.h` (Implementation)
-- `sdl_gpud_shaders.h` (Precompiled SPV, DXIL, and MSL shaders)
+- `SDL_gpud.h` (Implementation)
+- `SDL_gpud_shaders.h` (Precompiled SPV, DXIL, and MSL shaders)
 
 To use SDL GPUD, copy these two headers into your project and in **one C** file add:
 ```c
 #define SDL_GPUD_IMPL
-#include "sdl_gpud.h"
+#include "SDL_gpud.h"
 ```
 
-See the following for a basic example (or [main.cpp](main.cpp)):
+See the following for a basic example (or [main.cpp](example/main.cpp)):
 ```c++
 if (!SDL_InitGPUD(/* ... */)) {
     /* Handle errors */

@@ -1,0 +1,18 @@
+cmake_minimum_required(VERSION 3.24)
+project(example)
+
+set(BINARY_DIR ${CMAKE_BINARY_DIR}/bin)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${BINARY_DIR})
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${BINARY_DIR})
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${BINARY_DIR})
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${BINARY_DIR})
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE ${BINARY_DIR})
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG ${BINARY_DIR})
+make_directory(${BINARY_DIR})
+
+add_subdirectory(SDL)
+add_subdirectory(glm)
+add_executable(example WIN32 main.cpp impl.c)
+target_link_libraries(example PUBLIC SDL3::SDL3 glm::glm)
+target_include_directories(example PUBLIC ${CMAKE_SOURCE_DIR}/..)
+set_target_properties(example PROPERTIES CXX_STANDARD 20)

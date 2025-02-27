@@ -6,8 +6,9 @@
                 "SDL_GPUD_IMPL"
             ],
             "includePath": [
-                "${workspaceFolder}/SDL/include",
-                "${workspaceFolder}/glm"
+                "${workspaceFolder}/example/SDL/include",
+                "${workspaceFolder}/example/glm",
+                "${workspaceFolder}"
             ]
         }
     ],

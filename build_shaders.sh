@@ -4,12 +4,12 @@ PLATFORM=""
 if [[ "$OSTYPE" == "msys" ]]; then
     PLATFORM="win64"
 else
-    echo "Missing build for SDL_shadercross"
+    echo "Missing build(s)"
     exit 1
 fi
 
-SHADERCROSS="SDL_shadercross/$PLATFORM/shadercross.exe"
-INCLUDE="sdl_gpud_shaders.h"
+SHADERCROSS="bin/$PLATFORM/shadercross.exe"
+INCLUDE="SDL_gpud_shaders.h"
 SHADERS=("shader.frag" "shader.vert")
 
 rm -f $INCLUDE
@@ -37,3 +37,6 @@ for FILE in "${SHADERS[@]}"; do
     xxd -i $DXIL >> $INCLUDE
     xxd -i $MSL >> $INCLUDE
 done
+
+sed -i 's/shaders_//g' $INCLUDE
+sed -i 's/\bunsigned\b/static const unsigned/g' $INCLUDE
